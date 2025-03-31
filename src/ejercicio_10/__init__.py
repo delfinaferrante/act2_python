@@ -1,18 +1,12 @@
-def ranking_round (rounds):
-    """"""
-    # Diccionario para ir acumulando los puntajes
-    ranking = {}
-
+def view_rounds(rounds):
+    round_number = 1
     for one_round in rounds:
+        print(f"\n Ronda numero{round_number} \n")
+        print("{:<8} {:<6} {:<12} {:<8}".format("Jugador", "Kills", "Asistencias", "Muertes"))
+        print("-" * 35)
+
         for player in one_round:
-            values_player = one_round[player]
-            if player not in ranking:
-                ranking[player] = {'kills': 0, 'assists': 0, 'deaths': 0}
+            data_player = one_round[player]
+            print("{0:6} {1:5d} {2:8d} {3:9d}".format(player, data_player['kills'], data_player['assists'], data_player['deaths']))
         
-            # Sumo sus estadísticas a los totales
-            ranking[player]['kills'] += values_player['kills']
-            ranking[player]['assists'] += values_player['assists']
-            ranking[player]['deaths'] += int(values_player['deaths'])  # Convertimos bool a int, True 1 False 0
-        
-        # Imprime el ranking luego de cada ronda, ver como devolverlo al programa principal
-        print("Ranking después de la ronda:", one_round+1, ranking)
+        round_number += 1
