@@ -3,9 +3,13 @@ def view_final_ranking(final_ranking):
     print("\n Ranking Final \n")
     print("{:<8} {:<6} {:<12} {:<8} {:<8} {:<6}".format("Jugador", "Kills", "Asistencias", "Muertes", "MVPs", "Puntos"))
     print("-" * 50)
-    for player in final_ranking:
-        data_player = final_ranking[player]
+    
+    # Ordeno de forma decreciente el ranking en relación a los puntos totales
+    ranking_ord = sorted(final_ranking.items(), key=lambda x: x[1]['points'], reverse=True)
+
+    for player, data_player in ranking_ord:
         print("{:<10} {:<6d} {:<12d} {:<7d} {:<8d} {:<6d}".format(player, data_player['kills'], data_player['assists'], data_player['deaths'], data_player['count_mvp'], data_player['points']))
+    
     print("-" * 50)
 
 def add_mvp_ranking(final_ranking, mvp_counter):
