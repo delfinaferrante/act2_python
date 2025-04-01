@@ -1,3 +1,34 @@
+def view_final_ranking(final_ranking):
+    """Imprime el ranking final en orden decreciente"""
+    print("\n Ranking Final \n")
+    print("{:<8} {:<6} {:<12} {:<8} {:<8} {:<6}".format("Jugador", "Kills", "Asistencias", "Muertes", "MVPs", "Puntos"))
+    print("-" * 50)
+    for player in final_ranking:
+        data_player = final_ranking[player]
+        print("{:<10} {:<6d} {:<12d} {:<7d} {:<8d} {:<6d}".format(player, data_player['kills'], data_player['assists'], data_player['deaths'], data_player['count_mvp'], data_player['points']))
+    print("-" * 50)
+
+def add_mvp_ranking(final_ranking, mvp_counter):
+    """Agrega al ranking la cantidad de veces que un jugador fue MVP"""
+    # Recorro las claves del ranking, que son los jugadores
+    for player in mvp_counter:
+        count = mvp_counter[player]
+        if player in final_ranking:
+            final_ranking[player]['count_mvp'] = count
+
+def actualizar_ranking(one_round, final_ranking):
+    """Actualiza el diccionario con el ranking final de los jugadores. Acumula sus puntos"""
+    for player in one_round:
+        data_player = one_round[player]
+
+        if player not in final_ranking:
+            final_ranking[player] = {'kills': 0, 'assists': 0, 'deaths': 0, 'count_mvp': 0, 'points': 0}
+
+        final_ranking[player]['kills'] += data_player['kills']
+        final_ranking[player]['assists'] += data_player['assists']
+        final_ranking[player]['deaths'] += int(data_player['deaths'])
+        final_ranking[player]['points'] += calculate_score(data_player)
+
 def actualizar_mvp(mvp, mvp_counter, max_points):
     """Actualiza el diccionario contador de MVP"""
     # Pregunto si mvp tiene algun valor y contabilizo la cantidad de veces que fue MVP
@@ -38,14 +69,19 @@ def view_table(round_number, one_round):
         print("{:<10} {:<6d} {:<12d} {:<7d} {:<8d}".format(player, data_player['kills'], data_player['assists'], data_player['deaths'], points))
  
 def view_rounds(rounds):
-    """Función que recorre los rounds e imprime los datos"""
+    """Función que recorre los rounds, imprime los datos y devuelve contador de mvp y ranking final"""
     mvp_counter = {}
+    final_ranking = {}
     round_number = 1
 
     for one_round in rounds:
         view_table(round_number, one_round)
         mvp, max_points = search_mvp(one_round)
         actualizar_mvp(mvp, mvp_counter, max_points)
+        actualizar_ranking(one_round, final_ranking)
         round_number += 1 
 
-    return mvp_counter
+    add_mvp_ranking(final_ranking, mvp_counter)
+    #view_final_ranking(final_ranking)
+    #return mvp_counter
+    return mvp_counter, final_ranking
